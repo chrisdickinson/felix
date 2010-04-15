@@ -1,5 +1,7 @@
 from nappingcat.exceptions import NappingCatRejected
 from nappingcat import auth
+import sys
+
 PERMISSION_SEP = '::'
 
 def add_user(request, username):
