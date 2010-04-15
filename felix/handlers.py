@@ -24,7 +24,7 @@ def add_permission(request, username, permission):
     # you can pay it forward.
     if auth.has_permission(request, ('auth', 'modifyuser')) or auth.has_permission(request, permission_tuple):
         backend = auth.get_auth_backend_from_settings(request.settings)
-        backend.add_permission(username, permission)
+        backend.add_permission(username, permission_tuple)
         return "You granted '%s' the permission '%s'" % (username, permission)
     raise NappingCatRejected("You really don't have the right to do that. Sorry.")
 
@@ -35,6 +35,6 @@ def remove_permission(request, username, permission):
     # the permission, they can remove it from who they like.
     if auth.has_permission(request, ('auth', 'modifyuser')) or (user_owned_permission and auth.has_permission(request, permission_tuple)):
         backend = auth.get_backend_from_settings(request.settings)
-        backend.remove_permission(username, permission)
+        backend.remove_permission(username, permission_tuple)
         return "You removed the permission '%s' from '%s'." % (permission, username)
     raise NappingCatRejected("You really don't have the right to do that. Sorry.")
