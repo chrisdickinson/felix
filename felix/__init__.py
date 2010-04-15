@@ -17,6 +17,7 @@ class JSONAuth(AuthBackend):
         filename = os.path.expanduser(settings_dict.get('file', '~/nappingcat_auth.json')) 
         f = open(filename, 'w')
         f.write(simplejson.dumps(json))
+        f.flush()
         f.close()
 
     def has_permission(self, user, permission):
@@ -63,3 +64,11 @@ class JSONAuth(AuthBackend):
         auth_user = auth_dict['users'].get(user, None)
         auth_user['keys'] = [key] if not auth_user['keys'] else auth_user['keys'] + [key]
         self.save_auth_dict(auth_dict)
+        self.flush_keys()
+
+    def flush_keys(self):
+        auth_dict = self.get_auth_dict()
+        with open(os.path.expanduser('~/.ssh/authorized_keys'), 'w') as output:
+            for user in auth_dict['users']:
+                for key in user.get('keys', []):
+                    print >>output, 'command="nappingcat-serve %s",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding %s' % (user, key.strip())
