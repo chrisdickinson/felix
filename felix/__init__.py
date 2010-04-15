@@ -61,5 +61,5 @@ class JSONAuth(AuthBackend):
     def add_key_to_user(self, user, key):
         auth_dict = self.get_auth_dict()
         auth_user = auth_dict['users'].get(user, None)
-        auth_user['keys'] = key
-        
+        auth_user['keys'] = [key] if not auth_user['keys'] else auth_user['keys'] + [key]
+        self.save_auth_dict(auth_dict)
