@@ -35,7 +35,8 @@ class JSONAuth(AuthBackend):
             if next is None:
                 user_perms[level] = {}
                 user_perms = user_perms[level]
-
+            else:
+                user_perms = next
         user_perms[permission[-1]] = True
         self.save_auth_dict(auth_dict)
 
