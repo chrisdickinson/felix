@@ -26,7 +26,7 @@ def create_superuser():
                     'adduser':True,
                     'modifyuser':True,
                 },
-                'keys':[key,],
+                'keys':[key.strip(),],
             }
         }
     }
