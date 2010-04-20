@@ -65,12 +65,12 @@ class JSONAuth(AuthBackend):
         auth_user = auth_dict['users'].get(user, None)
         auth_user['keys'] = [key] if not auth_user['keys'] else auth_user['keys'] + [key]
         self.save_auth_dict(auth_dict)
-        self.flush_keys()
 
-    def flush_keys(self):
+    def get_users(self):
         auth_dict = self.get_auth_dict()
-        with open(os.path.expanduser('~/.ssh/authorized_keys'), 'w') as output:
-            for user in auth_dict['users']:
-                for key in auth_dict['users'][user].get('keys', []):
-                    if key.strip():
-                        print >>output, 'command="nappingcat-serve %s",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding %s' % (user, key.strip())
+        return auth_dict['users'].keys()
+
+    def get_keys(self, user):
+        auth_dict = self.get_auth_dict()
+        return auth_dict['users'].get(user, {}).get('keys', [])
+ 
